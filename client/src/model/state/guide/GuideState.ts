@@ -101,6 +101,7 @@ class GuideState implements IGuideState {
                 BS: false,
                 CS: false,
                 SKY: false,
+                BS4K: false,
             };
 
             // 放送波設定
@@ -109,6 +110,7 @@ class GuideState implements IGuideState {
                 scheduleOption.BS = true;
                 scheduleOption.CS = true;
                 scheduleOption.SKY = true;
+                scheduleOption.BS4K = true;
             } else {
                 scheduleOption[option.type] = true;
             }

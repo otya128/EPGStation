@@ -143,6 +143,9 @@ export default class GuideTimeSelector extends Vue {
             if (config.broadcast.SKY === true) {
                 this.broadcastItems.push('SKY');
             }
+            if (config.broadcast.BS4K === true) {
+                this.broadcastItems.push('BS4K');
+            }
         }
 
         // 日付

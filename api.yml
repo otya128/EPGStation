@@ -90,6 +90,7 @@ components:
             enum:
                 - GR
                 - BS
+                - BS4K
                 - CS
                 - SKY
 
@@ -197,6 +198,7 @@ components:
                         - BS
                         - CS
                         - SKY
+                        - BS4K
                     properties:
                         GR:
                             type: boolean
@@ -205,6 +207,8 @@ components:
                         CS:
                             type: boolean
                         SKY:
+                            type: boolean
+                        BS4K:
                             type: boolean
                 recorded:
                     description: 指定可能な録画ディレクトリ名
@@ -607,6 +611,9 @@ components:
                     type: boolean
                 SKY:
                     description: SKY
+                    type: boolean
+                BS4K:
+                    description: BS4K
                     type: boolean
                 channelIds:
                     description: 放送局
@@ -1719,6 +1726,14 @@ components:
             description: SKY
             in: query
             name: SKY
+            required: true
+            schema:
+                type: boolean
+
+        requiredBS4K:
+            description: BS4K
+            in: query
+            name: BS4K
             required: true
             schema:
                 type: boolean

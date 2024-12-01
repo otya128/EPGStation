@@ -21,6 +21,7 @@ export interface BroadcastWave {
     BS: BroadcastWaveState;
     CS: BroadcastWaveState;
     SKY: BroadcastWaveState;
+    BS4K: BroadcastWaveState;
 }
 
 export interface SubGenreIndex {

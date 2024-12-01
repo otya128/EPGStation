@@ -17,6 +17,7 @@ export const get: Operation = async (req, res) => {
             BS: req.query.BS as any,
             CS: req.query.CS as any,
             SKY: req.query.SKY as any,
+            BS4K: req.query.BS4K as any,
         };
         if (typeof req.query.isFree === 'boolean') {
             option.isFree = req.query.isFree;
@@ -58,6 +59,9 @@ get.apiDoc = {
         },
         {
             $ref: '#/components/parameters/requiredSKY',
+        },
+        {
+            $ref: '#/components/parameters/requiredBS4K',
         },
     ],
     responses: {

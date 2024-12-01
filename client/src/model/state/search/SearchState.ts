@@ -195,6 +195,10 @@ export default class SearchState implements ISearchState {
                     isEnable: true,
                     isShow: true,
                 },
+                BS4K: {
+                    isEnable: true,
+                    isShow: true,
+                },
             },
             genres: {},
             isShowSubgenres: true,
@@ -234,6 +238,10 @@ export default class SearchState implements ISearchState {
             if (config.broadcast.SKY === false) {
                 this.searchOption.broadcastWave.SKY.isEnable = false;
                 this.searchOption.broadcastWave.SKY.isShow = false;
+            }
+            if (config.broadcast.BS4K === false) {
+                this.searchOption.broadcastWave.BS4K.isEnable = false;
+                this.searchOption.broadcastWave.BS4K.isShow = false;
             }
         }
 
@@ -431,6 +439,7 @@ export default class SearchState implements ISearchState {
             this.searchOption.broadcastWave.BS.isEnable = !!searchOption.BS;
             this.searchOption.broadcastWave.CS.isEnable = !!searchOption.CS;
             this.searchOption.broadcastWave.SKY.isEnable = !!searchOption.SKY;
+            this.searchOption.broadcastWave.BS4K.isEnable = !!searchOption.BS4K;
         }
 
         // ジャンル
@@ -778,11 +787,13 @@ export default class SearchState implements ISearchState {
             this.searchOption.broadcastWave.BS.isEnable = false;
             this.searchOption.broadcastWave.CS.isEnable = false;
             this.searchOption.broadcastWave.SKY.isEnable = false;
+            this.searchOption.broadcastWave.BS4K.isEnable = false;
         } else if (this.isDisabledAllBroadcasWave(this.searchOption.broadcastWave)) {
             this.searchOption.broadcastWave.GR.isEnable = true;
             this.searchOption.broadcastWave.BS.isEnable = true;
             this.searchOption.broadcastWave.CS.isEnable = true;
             this.searchOption.broadcastWave.SKY.isEnable = true;
+            this.searchOption.broadcastWave.BS4K.isEnable = true;
         }
 
         // time range
@@ -840,6 +851,10 @@ export default class SearchState implements ISearchState {
         }
 
         if (broadcas.SKY.isShow === true && broadcas.SKY.isEnable === true) {
+            return false;
+        }
+
+        if (broadcas.BS4K.isShow === true && broadcas.BS4K.isEnable === true) {
             return false;
         }
 
@@ -993,6 +1008,9 @@ export default class SearchState implements ISearchState {
             if (option.broadcastWave.SKY.isShow === true) {
                 ruleOption.SKY = option.broadcastWave.SKY.isEnable;
             }
+            if (option.broadcastWave.BS4K.isShow === true) {
+                ruleOption.BS4K = option.broadcastWave.BS4K.isEnable;
+            }
         }
 
         // genres
@@ -1074,6 +1092,10 @@ export default class SearchState implements ISearchState {
         }
 
         if (broadcas.SKY.isShow === true && broadcas.SKY.isEnable !== true) {
+            return false;
+        }
+
+        if (broadcas.BS4K.isShow === true && broadcas.BS4K.isEnable !== true) {
             return false;
         }
 

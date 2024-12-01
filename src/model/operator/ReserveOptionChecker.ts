@@ -94,7 +94,13 @@ export default class ReserveOptionChecker implements IReserveOptionChecker {
         // channel と 放送局
         if (typeof option.channelIds !== 'undefined') {
             // channleIds が有効な場合は false でないといけない
-            if (!!option.GR === true || !!option.BS === true || !!option.CS === true || !!option.SKY === true) {
+            if (
+                !!option.GR === true ||
+                !!option.BS === true ||
+                !!option.CS === true ||
+                !!option.SKY === true ||
+                !!option.BS4K === true
+            ) {
                 return false;
             }
         }

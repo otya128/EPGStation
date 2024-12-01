@@ -48,7 +48,7 @@
         "lodash": "4.17.21",
         "log4js": "6.9.1",
         "minimist": "1.2.8",
-        "mirakurun": "3.9.0-rc.4",
+        "mirakurun": "https://github.com/otya128/MMirakurun/releases/download/3.9.0-rc.4-4K/mirakurun-3.9.0-rc.4-4K.tgz",
         "mkdirp": "3.0.1",
         "multer": "1.4.3",
         "mysql": "2.18.1",

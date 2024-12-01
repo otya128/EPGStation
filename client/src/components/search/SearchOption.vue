@@ -57,6 +57,12 @@
                             class="mx-1 my-0"
                             label="SKY"
                         ></v-checkbox>
+                        <v-checkbox
+                            v-if="searchState.searchOption.broadcastWave.BS4K.isShow"
+                            v-model="searchState.searchOption.broadcastWave.BS4K.isEnable"
+                            class="mx-1 my-0"
+                            label="BS4K"
+                        ></v-checkbox>
                     </div>
                 </SearchOptionRow>
                 <SearchOptionRow title="ジャンル">
