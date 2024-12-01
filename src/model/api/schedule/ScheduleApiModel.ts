@@ -50,6 +50,9 @@ export default class ScheduleApiModel implements IScheduleApiModel {
         if (option.SKY === true) {
             types.push('SKY');
         }
+        if (option.BS4K === true) {
+            types.push('BS4K');
+        }
 
         if (types.length === 0) {
             throw new Error('GetScheduleTypesError');

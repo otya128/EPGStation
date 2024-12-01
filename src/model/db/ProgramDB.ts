@@ -644,6 +644,9 @@ export default class ProgramDB implements IProgramDB {
             if (!!searchOption.SKY === true) {
                 channelTypes.push('SKY');
             }
+            if (!!searchOption.BS4K === true) {
+                channelTypes.push('BS4K');
+            }
             this.createInQuery(query, 'channelType', channelTypes);
         }
     }

@@ -43,6 +43,7 @@ class ReservationManageModel implements IReservationManageModel {
         BS: false,
         CS: false,
         SKY: false,
+        BS4K: false,
     };
 
     constructor(

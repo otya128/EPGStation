@@ -114,8 +114,10 @@ export default class ChannelDB implements IChannelDB {
                 return 2;
             case 'SKY':
                 return 3;
-            default:
+            case 'BS4K':
                 return 4;
+            default:
+                return 5;
         }
     }
 

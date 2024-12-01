@@ -60,6 +60,9 @@ export default class NavigationState implements INavigationState {
             if (config.broadcast.SKY === true) {
                 types.push('SKY');
             }
+            if (config.broadcast.BS4K === true) {
+                types.push('BS4K');
+            }
 
             for (const type of types) {
                 newItems.push({

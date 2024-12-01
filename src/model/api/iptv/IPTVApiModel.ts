@@ -79,7 +79,7 @@ class IPTVApiModel implements IIPTVApiModel {
             startAt: now,
             endAt: now + 1000 * 60 * 60 * 24 * days,
             isHalfWidth: isHalfWidth,
-            types: ['GR', 'BS', 'CS', 'SKY'],
+            types: ['GR', 'BS', 'CS', 'SKY', 'BS4K'],
         });
         const channels = await this.channelDB.findAll();
 

@@ -39,6 +39,9 @@ export default class OnAirState implements IOnAirState {
             if (config.broadcast.SKY === true) {
                 this.tabs.push('SKY');
             }
+            if (config.broadcast.BS4K === true) {
+                this.tabs.push('BS4K');
+            }
         }
     }
 
