@@ -125,6 +125,7 @@ export default interface IConfigFile {
 
     // drop log
     dropLog: string;
+    dropLogMaxLines: number;
     isEnabledDropCheck: boolean; // drop check を有効にするか
 
     // upload

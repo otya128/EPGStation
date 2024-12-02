@@ -20,6 +20,8 @@ class DropCheckerModel implements IDropCheckerModel {
     private time: Date | null = null;
     private hasError: boolean = false; // パケットチェック中にエラーを検知したか？
     private isFinished: boolean = false; // 終了処理が終わっているか？
+    private maxLines = 0;
+    private logLines = 0;
 
     private transformStream: stream.Transform | null = null;
     private tsReadableConnector: aribts.TsReadableConnector | null = null;
@@ -39,10 +41,12 @@ class DropCheckerModel implements IDropCheckerModel {
      * @param logDirPath: string ログファイル保存先ディレクトリパス
      * @param srcFilePath: string ソースファイル ログファイル名生成に使用する
      * @param stream: stream.Readable drop をチェックするストリーム
+     * @param maxLines: 最大行数
      * @return Promise<void>
      */
-    public async start(logDirPath: string, srcFilePath: string, readableStream: stream.Readable): Promise<void> {
+    public async start(logDirPath: string, srcFilePath: string, readableStream: stream.Readable, maxLines: number): Promise<void> {
         this.dest = await this.getLogFilePath(logDirPath, srcFilePath);
+        this.maxLines = maxLines;
 
         // 空ファイル生成
         await FileUtil.touchFile(this.dest);
@@ -258,6 +262,10 @@ class DropCheckerModel implements IDropCheckerModel {
             throw new Error('LogFilePathIsNull');
         }
 
+        if (this.logLines >= this.maxLines) {
+            return;
+        }
+        this.logLines += 1;
         await FileUtil.appendFile(this.dest, str);
     }
 

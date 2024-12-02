@@ -450,6 +450,20 @@ isEnabledDropCheck: true
 dropLog: '/hoge/fuga',
 ```
 
+### dropLogMaxLines
+
+#### ドロップチェック時に生成される.logファイルの最大行数
+
+| 種類   | デフォルト値 | 必須 |
+| ------ | ------------ | ---- |
+| string | 100          | no   |
+
+-   フルパスで指定する
+
+```yaml
+dropLogMaxLines: 100
+```
+
 ### subDirectory
 
 #### サブディレクトリとして動作させる (リバースプロキシ利用時を想定)
