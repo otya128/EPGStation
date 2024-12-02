@@ -150,7 +150,7 @@ class RecordedUploadState implements IRecordedUploadState {
      * @return apid.VideoFileType[]
      */
     public getFileTypeItems(): apid.VideoFileType[] {
-        return ['ts', 'encoded'];
+        return ['ts', 'mmttlv', 'encoded'];
     }
 
     /**

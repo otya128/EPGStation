@@ -66,6 +66,7 @@ components:
             type: string
             enum:
                 - 'ts'
+                - 'mmttlv'
                 - 'encoded'
 
         ThumbnailId:
