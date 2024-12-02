@@ -1,7 +1,7 @@
 import * as events from 'events';
 import * as fs from 'fs';
 import * as http from 'http';
-import { inject, injectable } from 'inversify';
+import { inject, injectable, optional } from 'inversify';
 import * as path from 'path';
 import * as stream from 'stream';
 import * as mapid from '../../../../node_modules/mirakurun/api';
@@ -45,6 +45,8 @@ class RecorderModel implements IRecorderModel {
     private dropLogFileDB: IDropLogFileDB;
     private streamCreator: IRecordingStreamCreator;
     private dropChecker: IDropCheckerModel;
+    private tsDropChecker: IDropCheckerModel;
+    private mmtTLVDropChecker?: IDropCheckerModel;
     private recordingUtil: IRecordingUtilModel;
     private recordingEvent: IRecordingEvent;
     private mirakurunClientModel: IMirakurunClientModel;
@@ -82,7 +84,8 @@ class RecorderModel implements IRecorderModel {
         @inject('IDropLogFileDB') dropLogFileDB: IDropLogFileDB,
         @inject('IRecordingStreamCreator')
         streamCreator: IRecordingStreamCreator,
-        @inject('IDropCheckerModel') dropChecker: IDropCheckerModel,
+        @inject('IDropCheckerModel') tsDropChecker: IDropCheckerModel,
+        @inject('IMMTTLVDropCheckerModel') @optional() mmtTLVDropChecker: IDropCheckerModel | undefined,
         @inject('IRecordingUtilModel') recordingUtil: IRecordingUtilModel,
         @inject('IRecordingEvent') recordingEvent: IRecordingEvent,
         @inject('IMirakurunClientModel') mirakurunClientModel: IMirakurunClientModel,
@@ -96,7 +99,9 @@ class RecorderModel implements IRecorderModel {
         this.videoFileDB = videoFileDB;
         this.dropLogFileDB = dropLogFileDB;
         this.streamCreator = streamCreator;
-        this.dropChecker = dropChecker;
+        this.tsDropChecker = tsDropChecker;
+        this.mmtTLVDropChecker = mmtTLVDropChecker;
+        this.dropChecker = tsDropChecker;
         this.recordingUtil = recordingUtil;
         this.recordingEvent = recordingEvent;
         this.mirakurunClientModel = mirakurunClientModel;
@@ -320,11 +325,12 @@ class RecorderModel implements IRecorderModel {
         this.stream.pipe(this.recFile);
 
         // drop checker
-        if (this.config.isEnabledDropCheck === true) {
+        const dropChecker = this.reserve.channelType === 'BS4K' ? this.mmtTLVDropChecker : this.tsDropChecker;
+        if (this.config.isEnabledDropCheck === true && dropChecker != null) {
             let dropFilePath: string | null = null;
             try {
-                await this.dropChecker.start(this.config.dropLog, recPath.fullPath, this.stream, this.config.dropLogMaxLines);
-                dropFilePath = this.dropChecker.getFilePath();
+                await dropChecker.start(this.config.dropLog, recPath.fullPath, this.stream, this.config.dropLogMaxLines);
+                dropFilePath = dropChecker.getFilePath();
             } catch (err: any) {
                 this.log.system.error(`drop check error: ${recPath.fullPath}`);
                 this.log.system.error(err);
