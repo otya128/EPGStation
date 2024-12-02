@@ -443,8 +443,13 @@ class RecorderModel implements IRecorderModel {
             const videoFile = new VideoFile();
             videoFile.parentDirectoryName = recPath.parendDir.name;
             videoFile.filePath = path.join(recPath.subDir, recPath.fileName);
-            videoFile.type = 'ts';
-            videoFile.name = 'TS';
+            if (this.reserve.channelType === 'BS4K') {
+                videoFile.type = 'mmttlv';
+                videoFile.name = 'MMTTLV';
+            } else {
+                videoFile.type = 'ts';
+                videoFile.name = 'TS';
+            }
             videoFile.recordedId = this.recordedId;
             this.log.system.info(`create video file: ${videoFile.filePath}`);
             this.videoFileId = await this.videoFileDB.insertOnce(videoFile);
