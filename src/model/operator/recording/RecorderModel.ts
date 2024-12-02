@@ -323,7 +323,7 @@ class RecorderModel implements IRecorderModel {
         if (this.config.isEnabledDropCheck === true) {
             let dropFilePath: string | null = null;
             try {
-                await this.dropChecker.start(this.config.dropLog, recPath.fullPath, this.stream);
+                await this.dropChecker.start(this.config.dropLog, recPath.fullPath, this.stream, this.config.dropLogMaxLines);
                 dropFilePath = this.dropChecker.getFilePath();
             } catch (err: any) {
                 this.log.system.error(`drop check error: ${recPath.fullPath}`);
