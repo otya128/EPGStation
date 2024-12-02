@@ -598,6 +598,18 @@ recordedFormat: '%TITLE% [%CHNAME%] %YEAR%年%MONTH%月%DAY%日(%DOW%曜日)'
 recordedFileExtension: .m2ts
 ```
 
+### mmtTLVRecordedFileExtension
+
+#### 録画ファイルの拡張子 (MMT/TLV)
+
+| 種類   | デフォルト値 | 必須 |
+| ------ | ------------ | ---- |
+| string | .mmts        | no   |
+
+```yaml
+recordedFileExtension: .mmts
+```
+
 ### storageLimitCheckIntervalTime
 
 #### ストレージの空き容量をチェックする間隔 (秒)

@@ -104,6 +104,7 @@ export default interface IConfigFile {
 
     // 拡張子
     recordedFileExtension: string;
+    mmtTLVRecordedFileExtension: string;
 
     // 録画ディレクトリ
     recorded: RecordedDirInfo[];

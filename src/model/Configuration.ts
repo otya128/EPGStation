@@ -229,6 +229,7 @@ namespace Configuration {
         timeSpecifiedEndMargin: 1,
         recordedFormat: '%YEAR%年%MONTH%月%DAY%日%HOUR%時%MIN%分%SEC%秒-%TITLE%',
         recordedFileExtension: '.ts',
+        mmtTLVRecordedFileExtension: '.mmts',
         recorded: [
             {
                 name: 'recorded',
