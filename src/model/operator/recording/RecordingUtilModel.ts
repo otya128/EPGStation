@@ -138,7 +138,8 @@ class RecordingUtilModel implements IRecordingUtilModel {
             }
         }
 
-        const newFileName = await this.getFileName(parentDir.path, subDir, fileName, this.config.recordedFileExtension);
+        const extension = reserve.channelType === "BS4K" ? this.config.mmtTLVRecordedFileExtension : this.config.recordedFileExtension;
+        const newFileName = await this.getFileName(parentDir.path, subDir, fileName, extension);
 
         return {
             parendDir: parentDir,
