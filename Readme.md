@@ -21,6 +21,7 @@ FFmpegについては対応版[https://github.com/superfashi/FFmpeg](https://git
 
 H.265に対応したブラウザであれば再生のオプションでMMTTLVを選ぶことでフォーク版のmpegts.js([https://github.com/otya128/mpegts.js](https://github.com/otya128/mpegts.js))によりリアルタイム視聴と録画再生、音声切替が可能になります。
 字幕と文字スーパーには現在対応していません。
+録画ファイルの再生は<http://otya128.github.io/mpegts.js/>から行うこともできます。
 
 WindowsのChromeとEdge、MacのChrome、AndroidのChromeで再生できることを確認しています。
 HDRも対応している環境であれば再生できます。
