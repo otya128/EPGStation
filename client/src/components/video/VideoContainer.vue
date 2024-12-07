@@ -1,208 +1,213 @@
 <template>
-    <div class="video-container" ref="container">
-        <div class="video-content" v-bind:class="{ 'is-ipad': isiPad === true }">
-            <div v-if="isLoading === true" class="loading">
-                <v-progress-circular :size="50" color="primary" indeterminate></v-progress-circular>
-            </div>
-            <div
-                ref="videoControlWrap"
-                class="video-control-wrap overflow-hidden"
-                v-bind:class="{ 'hide-cursor': isHideCursor }"
-                v-on:click="toggleControl"
-                v-on:mousemove="mousemove"
-                v-on:mouseleave="mouseleave"
-            >
-                <transition name="fade">
-                    <div v-if="isShowControl === true">
-                        <div class="d-flex center-buttons" v-on:click="stopPropagation">
-                            <v-btn v-if="duration > 0" class="add-shadow mx-4" icon dark v-on:click="rewindTime(30)">
-                                <v-icon dark>mdi-rewind-30</v-icon>
+    <div>
+        <div class="video-container" ref="container">
+            <div class="video-content" v-bind:class="{ 'is-ipad': isiPad === true }">
+                <div v-if="isLoading === true" class="loading">
+                    <v-progress-circular :size="50" color="primary" indeterminate></v-progress-circular>
+                </div>
+                <div
+                    ref="videoControlWrap"
+                    class="video-control-wrap overflow-hidden"
+                    v-bind:class="{ 'hide-cursor': isHideCursor }"
+                    v-on:click="toggleControl"
+                    v-on:mousemove="mousemove"
+                    v-on:mouseleave="mouseleave"
+                >
+                    <transition name="fade">
+                        <div v-if="isShowControl === true">
+                            <div class="d-flex center-buttons" v-on:click="stopPropagation">
+                                <v-btn v-if="duration > 0" class="add-shadow mx-4" icon dark v-on:click="rewindTime(30)">
+                                    <v-icon dark>mdi-rewind-30</v-icon>
+                                </v-btn>
+                                <v-btn v-if="duration > 0" class="add-shadow mx-4" icon dark v-on:click="rewindTime(10)">
+                                    <v-icon dark>mdi-rewind-10</v-icon>
+                                </v-btn>
+                                <v-btn class="play-button add-shadow mx-4" icon dark v-on:click="togglePlay">
+                                    <v-icon v-if="isPause === true" dark>mdi-play</v-icon>
+                                    <v-icon v-else dark>mdi-pause</v-icon>
+                                </v-btn>
+                                <v-btn v-if="duration > 0" class="add-shadow mx-4" icon dark v-on:click="forwardTime(10)">
+                                    <v-icon dark>mdi-fast-forward-10</v-icon>
+                                </v-btn>
+                                <v-btn v-if="duration > 0" class="add-shadow mx-4" icon dark v-on:click="forwardTime(30)">
+                                    <v-icon dark>mdi-fast-forward-30</v-icon>
+                                </v-btn>
+                            </div>
+                            <v-btn v-if="isEnabledRotation === true && isFullscreen === true" class="rotation-button" icon dark v-on:click="clickRotationButton">
+                                <v-icon dark>mdi-screen-rotation</v-icon>
                             </v-btn>
-                            <v-btn v-if="duration > 0" class="add-shadow mx-4" icon dark v-on:click="rewindTime(10)">
-                                <v-icon dark>mdi-rewind-10</v-icon>
-                            </v-btn>
-                            <v-btn class="play-button add-shadow mx-4" icon dark v-on:click="togglePlay">
-                                <v-icon v-if="isPause === true" dark>mdi-play</v-icon>
-                                <v-icon v-else dark>mdi-pause</v-icon>
-                            </v-btn>
-                            <v-btn v-if="duration > 0" class="add-shadow mx-4" icon dark v-on:click="forwardTime(10)">
-                                <v-icon dark>mdi-fast-forward-10</v-icon>
-                            </v-btn>
-                            <v-btn v-if="duration > 0" class="add-shadow mx-4" icon dark v-on:click="forwardTime(30)">
-                                <v-icon dark>mdi-fast-forward-30</v-icon>
-                            </v-btn>
-                        </div>
-                        <v-btn v-if="isEnabledRotation === true && isFullscreen === true" class="rotation-button" icon dark v-on:click="clickRotationButton">
-                            <v-icon dark>mdi-screen-rotation</v-icon>
-                        </v-btn>
-                        <div v-if="duration > 0" class="d-flex flex-column align-center left-buttons" v-on:click="stopPropagation">
-                            <v-btn class="add-shadow" icon dark v-on:click="speedUp">
-                                <v-icon dark>mdi-plus-circle</v-icon>
-                            </v-btn>
-                            <v-btn class="add-shadow my-2" text dark v-on:click="resetSpeed">x{{ playbackRate.toFixed(1) }}</v-btn>
-                            <v-btn class="add-shadow" icon dark v-on:click="speedDown">
-                                <v-icon dark>mdi-minus-circle</v-icon>
-                            </v-btn>
-                        </div>
-                        <div class="video-control">
-                            <div class="content" v-on:click="stopPropagation">
-                                <v-slider
-                                    class="slider"
-                                    v-model="currentTime"
-                                    :max="duration"
-                                    color="white"
-                                    track-color="grey"
-                                    :disabled="duration === 0"
-                                    v-on:start="startChangeCurrentPosition"
-                                    v-on:change="endChangeCurrentPosition"
-                                    v-on:input="updateCurrentPosition"
-                                ></v-slider>
-                                <div class="d-flex align-center overflow-hidden mx-2">
-                                    <v-btn class="play" icon dark v-on:click="togglePlay">
-                                        <v-icon v-if="isPause === true">mdi-play</v-icon>
-                                        <v-icon v-else>mdi-pause</v-icon>
-                                    </v-btn>
-                                    <div class="d-flex align-center volume-content">
-                                        <v-btn icon dark v-on:click="switchMute">
-                                            <v-icon v-if="volume > 0.4">mdi-volume-high</v-icon>
-                                            <v-icon v-else-if="volume > 0.0">mdi-volume-medium</v-icon>
-                                            <v-icon v-else>mdi-volume-off</v-icon>
+                            <div v-if="duration > 0" class="d-flex flex-column align-center left-buttons" v-on:click="stopPropagation">
+                                <v-btn class="add-shadow" icon dark v-on:click="speedUp">
+                                    <v-icon dark>mdi-plus-circle</v-icon>
+                                </v-btn>
+                                <v-btn class="add-shadow my-2" text dark v-on:click="resetSpeed">x{{ playbackRate.toFixed(1) }}</v-btn>
+                                <v-btn class="add-shadow" icon dark v-on:click="speedDown">
+                                    <v-icon dark>mdi-minus-circle</v-icon>
+                                </v-btn>
+                            </div>
+                            <div class="video-control">
+                                <div class="content" v-on:click="stopPropagation">
+                                    <v-slider
+                                        class="slider"
+                                        v-model="currentTime"
+                                        :max="duration"
+                                        color="white"
+                                        track-color="grey"
+                                        :disabled="duration === 0"
+                                        v-on:start="startChangeCurrentPosition"
+                                        v-on:change="endChangeCurrentPosition"
+                                        v-on:input="updateCurrentPosition"
+                                    ></v-slider>
+                                    <div class="d-flex align-center overflow-hidden mx-2">
+                                        <v-btn class="play" icon dark v-on:click="togglePlay">
+                                            <v-icon v-if="isPause === true">mdi-play</v-icon>
+                                            <v-icon v-else>mdi-pause</v-icon>
                                         </v-btn>
-                                        <v-slider
-                                            class="slider"
-                                            v-if="isHideAudioVolume === false"
-                                            v-model="volume"
-                                            min="0.0"
-                                            max="1.0"
-                                            step="0.1"
-                                            color="white"
-                                            track-color="grey"
-                                            v-on:input="changeVolume"
-                                            v-on:change="updateLastSeekTime"
-                                        ></v-slider>
+                                        <div class="d-flex align-center volume-content">
+                                            <v-btn icon dark v-on:click="switchMute">
+                                                <v-icon v-if="volume > 0.4">mdi-volume-high</v-icon>
+                                                <v-icon v-else-if="volume > 0.0">mdi-volume-medium</v-icon>
+                                                <v-icon v-else>mdi-volume-off</v-icon>
+                                            </v-btn>
+                                            <v-slider
+                                                class="slider"
+                                                v-if="isHideAudioVolume === false"
+                                                v-model="volume"
+                                                min="0.0"
+                                                max="1.0"
+                                                step="0.1"
+                                                color="white"
+                                                track-color="grey"
+                                                v-on:input="changeVolume"
+                                                v-on:change="updateLastSeekTime"
+                                            ></v-slider>
+                                        </div>
+                                        <div class="time Caption mx-2">
+                                            <span>{{ currentTimeStr }}</span>
+                                            <span class="mx-1">/</span>
+                                            <span>{{ durationStr }}</span>
+                                        </div>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            v-if="isEnabledSubtitles === true"
+                                            icon
+                                            dark
+                                            class="subtitle-icon"
+                                            v-bind:class="{ disabled: isShowingSubtitle === false }"
+                                            v-on:click="switchSubtitle"
+                                        >
+                                            <v-icon>mdi-subtitles</v-icon>
+                                        </v-btn>
+                                        <v-btn v-if="this.isEnabledPip === true" icon dark v-on:click="switchPip">
+                                            <v-icon>mdi-picture-in-picture-bottom-right</v-icon>
+                                        </v-btn>
+                                        <v-btn icon dark v-on:click="switchFullScreen">
+                                            <v-icon v-if="isFullscreen === false">mdi-fullscreen</v-icon>
+                                            <v-icon v-else>mdi-fullscreen-exit</v-icon>
+                                        </v-btn>
                                     </div>
-                                    <div class="time Caption mx-2">
-                                        <span>{{ currentTimeStr }}</span>
-                                        <span class="mx-1">/</span>
-                                        <span>{{ durationStr }}</span>
-                                    </div>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                        v-if="isEnabledSubtitles === true"
-                                        icon
-                                        dark
-                                        class="subtitle-icon"
-                                        v-bind:class="{ disabled: isShowingSubtitle === false }"
-                                        v-on:click="switchSubtitle"
-                                    >
-                                        <v-icon>mdi-subtitles</v-icon>
-                                    </v-btn>
-                                    <v-btn v-if="this.isEnabledPip === true" icon dark v-on:click="switchPip">
-                                        <v-icon>mdi-picture-in-picture-bottom-right</v-icon>
-                                    </v-btn>
-                                    <v-btn icon dark v-on:click="switchFullScreen">
-                                        <v-icon v-if="isFullscreen === false">mdi-fullscreen</v-icon>
-                                        <v-icon v-else>mdi-fullscreen-exit</v-icon>
-                                    </v-btn>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </transition>
-            </div>
-            <div class="video-wrap">
-                <NormalVideo
-                    v-if="videoParam.type == 'Normal'"
-                    ref="video"
-                    v-bind:videoSrc.sync="videoParam.src"
-                    v-on:timeupdate="onTimeupdate"
-                    v-on:waiting="onWaiting"
-                    v-on:loadeddata="onLoadeddata"
-                    v-on:canplay="onCanplay"
-                    v-on:ended="onEnded"
-                    v-on:play="onPlay"
-                    v-on:pause="onPause"
-                    v-on:ratechange="onChangePlaybackRate"
-                    v-on:volumechange="onVolumechange"
-                ></NormalVideo>
-                <LiveHLSVideo
-                    v-if="videoParam.type == 'LiveHLS'"
-                    ref="video"
-                    v-bind:channelId="videoParam.channelId"
-                    v-bind:mode="videoParam.mode"
-                    v-on:timeupdate="onTimeupdate"
-                    v-on:waiting="onWaiting"
-                    v-on:loadeddata="onLoadeddata"
-                    v-on:canplay="onCanplay"
-                    v-on:ended="onEnded"
-                    v-on:play="onPlay"
-                    v-on:pause="onPause"
-                    v-on:ratechange="onChangePlaybackRate"
-                    v-on:volumechange="onVolumechange"
-                ></LiveHLSVideo>
-                <RecordedStreamingVideo
-                    v-if="videoParam.type == 'RecordedStreaming'"
-                    ref="video"
-                    v-bind:recordedId="videoParam.recordedId"
-                    v-bind:videoFileId="videoParam.videoFileId"
-                    v-bind:streamingType="videoParam.streamingType"
-                    v-bind:mode="videoParam.mode"
-                    v-on:timeupdate="onTimeupdate"
-                    v-on:waiting="onWaiting"
-                    v-on:loadeddata="onLoadeddata"
-                    v-on:canplay="onCanplay"
-                    v-on:ended="onEnded"
-                    v-on:play="onPlay"
-                    v-on:pause="onPause"
-                    v-on:ratechange="onChangePlaybackRate"
-                    v-on:volumechange="onVolumechange"
-                ></RecordedStreamingVideo>
-                <RecordedHLSStreamingVideo
-                    v-if="videoParam.type == 'RecordedHLS'"
-                    ref="video"
-                    v-bind:recordedId="videoParam.recordedId"
-                    v-bind:videoFileId="videoParam.videoFileId"
-                    v-bind:mode="videoParam.mode"
-                    v-on:timeupdate="onTimeupdate"
-                    v-on:waiting="onWaiting"
-                    v-on:loadeddata="onLoadeddata"
-                    v-on:canplay="onCanplay"
-                    v-on:ended="onEnded"
-                    v-on:play="onPlay"
-                    v-on:pause="onPause"
-                    v-on:ratechange="onChangePlaybackRate"
-                    v-on:volumechange="onVolumechange"
-                ></RecordedHLSStreamingVideo>
-                <LiveMpegTsVideo
-                    v-if="videoParam.type == 'LiveMpegTs'"
-                    ref="video"
-                    v-bind:videoSrc.sync="videoParam.src"
-                    v-on:timeupdate="onTimeupdate"
-                    v-on:waiting="onWaiting"
-                    v-on:loadeddata="onLoadeddata"
-                    v-on:canplay="onCanplay"
-                    v-on:ended="onEnded"
-                    v-on:play="onPlay"
-                    v-on:pause="onPause"
-                    v-on:ratechange="onChangePlaybackRate"
-                    v-on:volumechange="onVolumechange"
-                ></LiveMpegTsVideo>
-                <LiveMMTTLVVideo
-                    v-if="videoParam.type == 'LiveMMTTLV'"
-                    ref="video"
-                    v-bind:videoSrc.sync="videoParam.src"
-                    v-on:timeupdate="onTimeupdate"
-                    v-on:waiting="onWaiting"
-                    v-on:loadeddata="onLoadeddata"
-                    v-on:canplay="onCanplay"
-                    v-on:ended="onEnded"
-                    v-on:play="onPlay"
-                    v-on:pause="onPause"
-                    v-on:ratechange="onChangePlaybackRate"
-                    v-on:volumechange="onVolumechange"
-                ></LiveMMTTLVVideo>
+                    </transition>
+                </div>
+                <div class="video-wrap">
+                    <NormalVideo
+                        v-if="videoParam.type == 'Normal'"
+                        ref="video"
+                        v-bind:videoSrc.sync="videoParam.src"
+                        v-on:timeupdate="onTimeupdate"
+                        v-on:waiting="onWaiting"
+                        v-on:loadeddata="onLoadeddata"
+                        v-on:canplay="onCanplay"
+                        v-on:ended="onEnded"
+                        v-on:play="onPlay"
+                        v-on:pause="onPause"
+                        v-on:ratechange="onChangePlaybackRate"
+                        v-on:volumechange="onVolumechange"
+                    ></NormalVideo>
+                    <LiveHLSVideo
+                        v-if="videoParam.type == 'LiveHLS'"
+                        ref="video"
+                        v-bind:channelId="videoParam.channelId"
+                        v-bind:mode="videoParam.mode"
+                        v-on:timeupdate="onTimeupdate"
+                        v-on:waiting="onWaiting"
+                        v-on:loadeddata="onLoadeddata"
+                        v-on:canplay="onCanplay"
+                        v-on:ended="onEnded"
+                        v-on:play="onPlay"
+                        v-on:pause="onPause"
+                        v-on:ratechange="onChangePlaybackRate"
+                        v-on:volumechange="onVolumechange"
+                    ></LiveHLSVideo>
+                    <RecordedStreamingVideo
+                        v-if="videoParam.type == 'RecordedStreaming'"
+                        ref="video"
+                        v-bind:recordedId="videoParam.recordedId"
+                        v-bind:videoFileId="videoParam.videoFileId"
+                        v-bind:streamingType="videoParam.streamingType"
+                        v-bind:mode="videoParam.mode"
+                        v-on:timeupdate="onTimeupdate"
+                        v-on:waiting="onWaiting"
+                        v-on:loadeddata="onLoadeddata"
+                        v-on:canplay="onCanplay"
+                        v-on:ended="onEnded"
+                        v-on:play="onPlay"
+                        v-on:pause="onPause"
+                        v-on:ratechange="onChangePlaybackRate"
+                        v-on:volumechange="onVolumechange"
+                    ></RecordedStreamingVideo>
+                    <RecordedHLSStreamingVideo
+                        v-if="videoParam.type == 'RecordedHLS'"
+                        ref="video"
+                        v-bind:recordedId="videoParam.recordedId"
+                        v-bind:videoFileId="videoParam.videoFileId"
+                        v-bind:mode="videoParam.mode"
+                        v-on:timeupdate="onTimeupdate"
+                        v-on:waiting="onWaiting"
+                        v-on:loadeddata="onLoadeddata"
+                        v-on:canplay="onCanplay"
+                        v-on:ended="onEnded"
+                        v-on:play="onPlay"
+                        v-on:pause="onPause"
+                        v-on:ratechange="onChangePlaybackRate"
+                        v-on:volumechange="onVolumechange"
+                    ></RecordedHLSStreamingVideo>
+                    <LiveMpegTsVideo
+                        v-if="videoParam.type == 'LiveMpegTs'"
+                        ref="video"
+                        v-bind:videoSrc.sync="videoParam.src"
+                        v-on:timeupdate="onTimeupdate"
+                        v-on:waiting="onWaiting"
+                        v-on:loadeddata="onLoadeddata"
+                        v-on:canplay="onCanplay"
+                        v-on:ended="onEnded"
+                        v-on:play="onPlay"
+                        v-on:pause="onPause"
+                        v-on:ratechange="onChangePlaybackRate"
+                        v-on:volumechange="onVolumechange"
+                    ></LiveMpegTsVideo>
+                    <LiveMMTTLVVideo
+                        v-if="videoParam.type == 'LiveMMTTLV'"
+                        ref="video"
+                        v-bind:videoSrc.sync="videoParam.src"
+                        v-on:timeupdate="onTimeupdate"
+                        v-on:waiting="onWaiting"
+                        v-on:loadeddata="onLoadeddata"
+                        v-on:canplay="onCanplay"
+                        v-on:ended="onEnded"
+                        v-on:play="onPlay"
+                        v-on:pause="onPause"
+                        v-on:ratechange="onChangePlaybackRate"
+                        v-on:volumechange="onVolumechange"
+                        v-on:audiotracksmetadata="onAudioTracksMetadata"
+                    ></LiveMMTTLVVideo>
+                </div>
             </div>
         </div>
+        <v-select v-if="videoParam.type == 'LiveMMTTLV'" :items="tracks" v-model="selectedTrack"></v-select>
+        <v-btn v-if="videoParam.type == 'LiveMMTTLV'" v-on:click="selectAudioTrack()">音声切替</v-btn>
     </div>
 </template>
 
@@ -220,6 +225,7 @@ import UaUtil from '@/util/UaUtil';
 import Util from '@/util/Util';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { IVideoPlayerSettingModel } from '@/model/storage/video/IVideoPlayerSettingModel';
+import Mpegts from 'mpegts.js';
 
 interface SpeedItem {
     text: string;
@@ -283,6 +289,9 @@ export default class VideoContainer extends Vue {
     // 内部字幕状態
     // eslint-disable-next-line no-undef
     private internalSubtitleState: TextTrackMode = 'disabled';
+
+    public tracks: { text: string; value: string }[] = [];
+    public selectedTrack?: string;
 
     public created(): void {
         document.addEventListener('keydown', this.keyDwonListener, false);
@@ -890,6 +899,74 @@ export default class VideoContainer extends Vue {
 
     public stopPropagation(e: Event): void {
         e.stopPropagation();
+    }
+
+    public onAudioTracksMetadata(tracks: Mpegts.AudioTrack[]) {
+        this.tracks = tracks.map(track => {
+            let text = '';
+            const languages = new Map([
+                ['jpn', '日本語'],
+                ['eng', '英語'],
+                ['deu', 'ドイツ語'],
+                ['fra', 'フランス語'],
+                ['ita', 'イタリア語'],
+                ['rus', 'ロシア語'],
+                ['zho', '中国語'],
+                ['kor', '韓国語'],
+                ['spa', 'スペイン語'],
+                ['etc', '外国語'],
+            ]);
+            if (track.main) {
+                text += '主音声 ';
+            }
+            const l = track.language ?? '';
+            const language = languages.get(l) ?? l;
+            if (language !== '') {
+                text += language;
+                text += ' ';
+            }
+            switch (track.channelLayoutName ?? '') {
+                case 'mono':
+                case 'dualmono':
+                    text += 'モノラル ';
+                    break;
+                case 'stereo':
+                    text += 'ステレオ ';
+                    break;
+                case '':
+                    break;
+                default:
+                    text += track.channelLayoutName + 'ch ';
+                    break;
+            }
+            switch (track.audioDescription) {
+                case 'visually':
+                    text += '解説音声 ';
+                    break;
+                case 'hearing':
+                    text += '聴覚障がい者用音声 ';
+                    break;
+            }
+            if (track.samplingRate) {
+                text += track.samplingRate + 'Hz';
+                text += ' ';
+            }
+            text = text.trimEnd();
+            const label = track.label ?? '';
+            if (label !== '') {
+                text = label + ' (' + text + ')';
+            }
+            return {
+                text,
+                value: track.id,
+            };
+        });
+    }
+    selectAudioTrack() {
+        if (this.selectedTrack == null) {
+            return;
+        }
+        (this.$refs.video as BaseVideo).selectAudioTrack(this.selectedTrack);
     }
 }
 </script>

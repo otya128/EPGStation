@@ -361,4 +361,6 @@ export default abstract class BaseVide extends Vue {
             }
         }
     }
+
+    public selectAudioTrack(id: string): void {}
 }

@@ -78,6 +78,7 @@ export default class LiveMMTTLVVideo extends BaseVideo {
 
             this.mepgtsPlayer.attachMediaElement(video);
             this.mepgtsPlayer.load();
+            this.mepgtsPlayer.on(Mpegts.Events.AUDIO_TRACKS_METADATA, e => this.$emit('audiotracksmetadata', e));
             this.mepgtsPlayer.play();
         });
     }
@@ -104,6 +105,12 @@ export default class LiveMMTTLVVideo extends BaseVideo {
      */
     public setCurrentTime(time: number): void {
         return;
+    }
+
+    public selectAudioTrack(id: string): void {
+        if (this.mepgtsPlayer != null) {
+            this.mepgtsPlayer.switchAudioTrack(id);
+        }
     }
 }
 </script>
