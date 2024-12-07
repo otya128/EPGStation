@@ -134,6 +134,23 @@ export default class OnAirSelectStream extends Vue {
                     text: '視聴ページへの移動に失敗',
                 });
             });
+        } else if (this.dialogState.selectedStreamType === 'MMTTLV') {
+            // 再生に対応しているか?
+            if (Mpegts.isSupported() === false || Mpegts.getFeatureList().mseLivePlayback === false) {
+                this.snackbarState.open({
+                    color: 'error',
+                    text: '再生に対応していません',
+                });
+
+                return;
+            }
+
+            await this.mmtTLVView().catch(err => {
+                this.snackbarState.open({
+                    color: 'error',
+                    text: '視聴ページへの移動に失敗',
+                });
+            });
         } else {
             const channel = this.dialogState.getChannelItem();
             if (channel !== null && typeof this.dialogState.selectedStreamType !== 'undefined' && typeof this.dialogState.selectedStreamConfig !== 'undefined') {
@@ -189,6 +206,30 @@ export default class OnAirSelectStream extends Vue {
                 path: '/onair/watch',
                 query: {
                     type: 'm2tsll',
+                    channel: channel.id.toString(10),
+                    mode: this.dialogState.selectedStreamConfig.toString(10),
+                },
+            }).catch(err => {
+                this.snackbarState.open({
+                    color: 'error',
+                    text: '視聴ページへの移動に失敗',
+                });
+            });
+        }
+    }
+
+    /**
+     * MMT/TLV形式の再生
+     */
+    private async mmtTLVView(): Promise<void> {
+        const channel = this.dialogState.getChannelItem();
+        if (channel !== null && typeof this.dialogState.selectedStreamType !== 'undefined' && typeof this.dialogState.selectedStreamConfig !== 'undefined') {
+            this.dialogState.isOpen = false;
+            await Util.sleep(200);
+            await Util.move(this.$router, {
+                path: '/onair/watch',
+                query: {
+                    type: 'mmttlv',
                     channel: channel.id.toString(10),
                     mode: this.dialogState.selectedStreamConfig.toString(10),
                 },

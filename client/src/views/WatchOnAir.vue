@@ -15,7 +15,7 @@
 import WatchOnAirInfoCard from '@/components/onair/watch/WatchOnAirInfoCard.vue';
 import TitleBar from '@/components/titleBar/TitleBar.vue';
 import VideoContainer from '@/components/video/VideoContainer.vue';
-import { BaseVideoParam, LiveHLSParam, LiveMpegTsVideoParam, NormalVideoParam } from '@/components/video/ViedoParam';
+import { BaseVideoParam, LiveHLSParam, LiveMpegTsVideoParam, NormalVideoParam, LiveMMTTLVVideoParam } from '@/components/video/ViedoParam';
 import container from '@/model/ModelContainer';
 import IScrollPositionState from '@/model/state/IScrollPositionState';
 import ISnackbarState from '@/model/state/snackbar/ISnackbarState';
@@ -70,6 +70,11 @@ export default class WatchOnAir extends Vue {
                     (this.videoParam as LiveMpegTsVideoParam) = {
                         type: 'LiveMpegTs',
                         src: `${window.location.origin}${Util.getSubDirectory()}/api/streams/live/${this.watchParam.channel}/m2tsll?mode=${this.watchParam.mode}`,
+                    };
+                } else if (this.watchParam.type === 'mmttlv') {
+                    (this.videoParam as LiveMMTTLVVideoParam) = {
+                        type: 'LiveMMTTLV',
+                        src: `${window.location.origin}${Util.getSubDirectory()}/api/streams/live/${this.watchParam.channel}/m2ts?mode=${2}`,
                     };
                 } else {
                     (this.videoParam as NormalVideoParam) = {

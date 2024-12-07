@@ -1,6 +1,6 @@
 import * as apid from '../../../../../api';
 
-export type LiveStreamType = 'M2TS' | 'M2TS-LL' | 'WebM' | 'MP4' | 'HLS';
+export type LiveStreamType = 'M2TS' | 'M2TS-LL' | 'WebM' | 'MP4' | 'HLS' | 'MMTTLV';
 
 export interface StreamConfigItem {
     text: string;

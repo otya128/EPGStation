@@ -187,6 +187,20 @@
                     v-on:ratechange="onChangePlaybackRate"
                     v-on:volumechange="onVolumechange"
                 ></LiveMpegTsVideo>
+                <LiveMMTTLVVideo
+                    v-if="videoParam.type == 'LiveMMTTLV'"
+                    ref="video"
+                    v-bind:videoSrc.sync="videoParam.src"
+                    v-on:timeupdate="onTimeupdate"
+                    v-on:waiting="onWaiting"
+                    v-on:loadeddata="onLoadeddata"
+                    v-on:canplay="onCanplay"
+                    v-on:ended="onEnded"
+                    v-on:play="onPlay"
+                    v-on:pause="onPause"
+                    v-on:ratechange="onChangePlaybackRate"
+                    v-on:volumechange="onVolumechange"
+                ></LiveMMTTLVVideo>
             </div>
         </div>
     </div>
@@ -199,6 +213,7 @@ import NormalVideo from '@/components/video/NormalVideo.vue';
 import RecordedHLSStreamingVideo from '@/components/video/RecordedHLSStreamingVideo.vue';
 import RecordedStreamingVideo from '@/components/video/RecordedStreamingVideo.vue';
 import LiveMpegTsVideo from '@/components/video/LiveMpegTsVideo.vue';
+import LiveMMTTLVVideo from '@/components/video/LiveMMTTLVVideo.vue';
 import * as VideoParam from '@/components/video/ViedoParam';
 import container from '@/model/ModelContainer';
 import UaUtil from '@/util/UaUtil';
@@ -218,6 +233,7 @@ interface SpeedItem {
         RecordedStreamingVideo,
         RecordedHLSStreamingVideo,
         LiveMpegTsVideo,
+        LiveMMTTLVVideo,
     },
 })
 export default class VideoContainer extends Vue {

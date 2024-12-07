@@ -77,6 +77,10 @@ export default class OnAirSelectStreamState implements IOnAirSelectStreamState {
         this.streamConfig = {};
 
         const config = this.serverConfig.getConfig();
+        if (this.channelItem?.channelType === 'BS4K' && config?.isEnableTSLiveStream === true) {
+            this.streamTypes.push('MMTTLV');
+            this.streamConfig['MMTTLV'] = ['無変換'];
+        }
         if (
             config !== null &&
             config.isEnableTSLiveStream === true &&
