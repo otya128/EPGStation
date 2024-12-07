@@ -67,8 +67,9 @@ export default class VideoApiModel implements IVideoApiModel {
             case '.m2ts':
             case '.ts':
                 return 'video/mp2t';
+            case '.mmts':
             default:
-                throw new Error('MimeTypeError');
+                return 'application/octet-stream';
         }
     }
 

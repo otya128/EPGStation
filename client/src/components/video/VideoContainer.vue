@@ -203,11 +203,26 @@
                         v-on:volumechange="onVolumechange"
                         v-on:audiotracksmetadata="onAudioTracksMetadata"
                     ></LiveMMTTLVVideo>
+                    <RecordedMMTTLVVideo
+                        v-if="videoParam.type == 'RecordedMMTTLV'"
+                        ref="video"
+                        v-bind:videoFileId="videoParam.videoFileId"
+                        v-on:timeupdate="onTimeupdate"
+                        v-on:waiting="onWaiting"
+                        v-on:loadeddata="onLoadeddata"
+                        v-on:canplay="onCanplay"
+                        v-on:ended="onEnded"
+                        v-on:play="onPlay"
+                        v-on:pause="onPause"
+                        v-on:ratechange="onChangePlaybackRate"
+                        v-on:volumechange="onVolumechange"
+                        v-on:audiotracksmetadata="onAudioTracksMetadata"
+                    ></RecordedMMTTLVVideo>
                 </div>
             </div>
         </div>
-        <v-select v-if="videoParam.type == 'LiveMMTTLV'" :items="tracks" v-model="selectedTrack"></v-select>
-        <v-btn v-if="videoParam.type == 'LiveMMTTLV'" v-on:click="selectAudioTrack()">音声切替</v-btn>
+        <v-select v-if="videoParam.type == 'LiveMMTTLV' || videoParam.type == 'RecordedMMTTLV'" :items="tracks" v-model="selectedTrack"></v-select>
+        <v-btn v-if="videoParam.type == 'LiveMMTTLV' || videoParam.type == 'RecordedMMTTLV'" v-on:click="selectAudioTrack()">音声切替</v-btn>
     </div>
 </template>
 
@@ -219,6 +234,7 @@ import RecordedHLSStreamingVideo from '@/components/video/RecordedHLSStreamingVi
 import RecordedStreamingVideo from '@/components/video/RecordedStreamingVideo.vue';
 import LiveMpegTsVideo from '@/components/video/LiveMpegTsVideo.vue';
 import LiveMMTTLVVideo from '@/components/video/LiveMMTTLVVideo.vue';
+import RecordedMMTTLVVideo from '@/components/video/RecordedMMTTLVVideo.vue';
 import * as VideoParam from '@/components/video/ViedoParam';
 import container from '@/model/ModelContainer';
 import UaUtil from '@/util/UaUtil';
@@ -240,6 +256,7 @@ interface SpeedItem {
         RecordedHLSStreamingVideo,
         LiveMpegTsVideo,
         LiveMMTTLVVideo,
+        RecordedMMTTLVVideo,
     },
 })
 export default class VideoContainer extends Vue {
@@ -291,7 +308,7 @@ export default class VideoContainer extends Vue {
     private internalSubtitleState: TextTrackMode = 'disabled';
 
     public tracks: { text: string; value: string }[] = [];
-    public selectedTrack?: string;
+    public selectedTrack?: string = '10';
 
     public created(): void {
         document.addEventListener('keydown', this.keyDwonListener, false);

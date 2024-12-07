@@ -60,6 +60,24 @@ export default class RecordedDetailSelectStreamState implements IRecordedDetailS
                     this.streamTypeItems.push('HLS');
                     this.streamConfig['HLS'] = ts.hls;
                 }
+            } else if (videoFile.type === 'mmttlv' && config.isEnableTSRecordedStream === true && typeof ts !== 'undefined') {
+                this.streamTypeItems.push('MMTTLV');
+                this.streamConfig['MMTTLV'] = ['無変換'];
+
+                if (typeof ts.webm !== 'undefined' && ts.webm.length > 0) {
+                    this.streamTypeItems.push('WebM');
+                    this.streamConfig['WebM'] = ts.webm;
+                }
+
+                if (typeof ts.mp4 !== 'undefined' && ts.mp4.length > 0) {
+                    this.streamTypeItems.push('MP4');
+                    this.streamConfig['MP4'] = ts.mp4;
+                }
+
+                if (typeof ts.hls !== 'undefined' && ts.hls.length > 0) {
+                    this.streamTypeItems.push('HLS');
+                    this.streamConfig['HLS'] = ts.hls;
+                }
             } else if (videoFile.type === 'encoded' && config.isEnableEncodedRecordedStream === true && typeof encoded !== 'undefined') {
                 // webm
                 if (typeof encoded.webm !== 'undefined' && encoded.webm.length > 0) {

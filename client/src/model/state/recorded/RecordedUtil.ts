@@ -44,7 +44,9 @@ export default class RecordedUtil implements IRecordedUtil {
         const config = this.serverConfigModel.getConfig();
         if (typeof result.display.videoFiles !== 'undefined' && config !== null) {
             result.display.canStremingVideoFiles = result.display.videoFiles.filter(v => {
-                return (v.type === 'ts' && config.isEnableTSRecordedStream === true) || (v.type === 'encoded' && config.isEnableEncodedRecordedStream === true);
+                return (
+                    (v.type === 'ts' && config.isEnableTSRecordedStream === true) || (v.type === 'encoded' && config.isEnableEncodedRecordedStream === true) || v.type === 'mmttlv'
+                );
             });
 
             if (result.display.canStremingVideoFiles.length === 0) {

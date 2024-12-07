@@ -31,7 +31,7 @@ Component.registerHooks(['beforeRouteUpdate', 'beforeRouteLeave']);
     },
 })
 export default class WatchRecordedStreaming extends Vue {
-    public videoParam: VideoParam.RecordedStreamingParam | VideoParam.RecordedHLSParam | null = null;
+    public videoParam: VideoParam.RecordedStreamingParam | VideoParam.RecordedHLSParam | VideoParam.RecordedMMTTLVVideoParam | null = null;
     private scrollState: IScrollPositionState = container.get<IScrollPositionState>('IScrollPositionState');
 
     @Watch('$route', { immediate: true, deep: true })
@@ -50,6 +50,12 @@ export default class WatchRecordedStreaming extends Vue {
                         recordedId: recordedId,
                         videoFileId: videoFileId,
                         mode: mode,
+                    };
+                } else if (streamingType === 'mmttlv') {
+                    this.videoParam = {
+                        type: 'RecordedMMTTLV',
+                        recordedId: recordedId,
+                        videoFileId: videoFileId,
                     };
                 } else {
                     this.videoParam = {
