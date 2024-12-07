@@ -4,6 +4,35 @@
 iOS・Android での閲覧に最適化されたモバイルフレンドリーな Web インターフェイスが特徴です  
 PC からの閲覧でもモダンな UI で操作可能です
 
+## このforkについて
+
+チャンネル種別としてBS4Kが追加されています。
+それに従いDBも更新されているため、もし既存のデータベースを利用する場合はDBのマイグレーションが必須です。(`npm run orm-run`)
+Mirakurunは対応版([https://github.com/otya128/MMirakurun](https://github.com/otya128/MMirakurun))を用いる必要があります。
+
+### FFmpeg
+
+2024年12月7日現在の情報
+
+FFmpegについては対応版[https://github.com/superfashi/FFmpeg](https://github.com/superfashi/FFmpeg)を用いるとサムネイル生成などが行えます。
+ただし、ハングしてしまう問題があるためフォーク版([https://github.com/otya128/FFmpeg-mmttlv](https://github.com/otya128/FFmpeg-mmttlv))の利用を推奨します。
+
+### 視聴機能
+
+H.265に対応したブラウザであれば再生のオプションでMMTTLVを選ぶことでフォーク版のmpegts.js([https://github.com/otya128/mpegts.js](https://github.com/otya128/mpegts.js))によりリアルタイム視聴と録画再生、音声切替が可能になります。
+字幕と文字スーパーには現在対応していません。
+
+WindowsのChromeとEdge、MacのChrome、AndroidのChromeで再生できることを確認しています。
+HDRも対応している環境であれば再生できます。
+EdgeはH.265のMSE in Workersに非対応なためリアルタイム視聴については安定性に難がある可能性があります。
+
+WindowsのFirefoxは132以降でH.265 Main 10の再生に対応したもののデフォルトでは通常の動画では無効になっているため`about:config`にて`media.wmf.hevc.enabled`を1に設定する必要があります。
+2025年1月7日にリリース予定の134以降ではデフォルトで有効になる見込みです。 ([https://bugzilla.mozilla.org/show_bug.cgi?id=1928536](https://bugzilla.mozilla.org/show_bug.cgi?id=1928536))
+WindowsのFirefoxはHDRには対応していません。
+少なくともIntelのiGPUではある程度再生したところでカクカクになり正常に再生できないため推奨しません。
+
+MacのSafariでも動作は確認していますが、デコードエラーが発生して安定して再生できないため推奨しません。
+
 ## 機能
 
 ### 放送番組の視聴・録画・管理
