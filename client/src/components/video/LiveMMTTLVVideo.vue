@@ -60,6 +60,7 @@ export default class LiveMMTTLVVideo extends BaseVideo {
             Mpegts.LoggingControl.enableVerbose = true;
             const mpegtsConfig: Mpegts.Config = {
                 enableWorkerForMSE,
+                enableStashBuffer: false,
                 liveSync: true,
                 systemClockSync: true,
                 liveSyncMaxLatency: 0.7,

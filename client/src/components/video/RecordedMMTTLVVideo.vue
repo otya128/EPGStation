@@ -61,6 +61,9 @@ export default class RecordedMMTTLVVideo extends BaseVideo {
             Mpegts.LoggingControl.enableVerbose = true;
             const mpegtsConfig: Mpegts.Config = {
                 enableWorkerForMSE,
+                enableStashBuffer: false,
+                lazyLoadMaxDuration: 20,
+                lazyLoadRecoverDuration: 10,
             };
             this.mepgtsPlayer = Mpegts.createPlayer(
                 {
