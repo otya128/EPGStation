@@ -569,7 +569,7 @@ class ReservationManageModel implements IReservationManageModel {
     /**
      * 手動予約の更新
      */
-    public async update(reserveId: apid.ReserveId, isSuppressLog: boolean = false): Promise<void> {
+    public async update(reserveId: apid.ReserveId, isSuppressLog: boolean = false, isFirstUpdate: boolean = false): Promise<void> {
         // 実行権取得
         const exeId = await this.executeManagementModel.getExecution(ReservationManageModel.UPDATE_RESERVE_PRIORITY);
         const finalize = () => {
@@ -616,12 +616,18 @@ class ReservationManageModel implements IReservationManageModel {
         }
 
         // 番組情報に更新があったか確認する
-        if (oldReserve.programUpdateTime === newProgram.updateTime) {
+        if (!isFirstUpdate && oldReserve.programUpdateTime === newProgram.updateTime) {
             finalize();
             if (isSuppressLog === false) {
                 this.log.system.info(`no update reservation: ${reserveId}`);
             }
 
+            return;
+        }
+
+        if (isFirstUpdate) {
+            finalize();
+            this.reserveEvent.emitUpdated({ isSuppressLog, update: [oldReserve]});
             return;
         }
 
@@ -869,9 +875,9 @@ class ReservationManageModel implements IReservationManageModel {
             times.push({ startAt: reserve.startAt, endAt: reserve.endAt });
         }
 
-        // 初回更新かつ時刻指定予約である場合は
+        // 初回更新 /* かつ時刻指定予約である */ の場合は
         // createDiff 実行時に差分を出して録画タイマーを生成するように強制する
-        if (isFirstUpdate === true && rule?.isTimeSpecification === true) {
+        if (isFirstUpdate === true) {
             for (const r of oldRuleReserves) {
                 r.ruleUpdateCnt = -1; // ruleUpdateCnt は 0 以上しか存在しないので強制的に差分となる
             }
@@ -1164,7 +1170,7 @@ class ReservationManageModel implements IReservationManageModel {
 
         // 手動予約更新
         for (const manualId of manualIds) {
-            await this.update(manualId, isSuppressLog).catch(err => {
+            await this.update(manualId, isSuppressLog, isFirstUpdate).catch(err => {
                 this.log.system.error(err);
             });
             await Util.sleep(10);
@@ -1172,7 +1178,7 @@ class ReservationManageModel implements IReservationManageModel {
 
         // ルール予約によってイベントリレーで予約された予約の更新
         for (const manualId of ruleEventRelayIds) {
-            await this.update(manualId, isSuppressLog).catch(err => {
+            await this.update(manualId, isSuppressLog, isFirstUpdate).catch(err => {
                 this.log.system.error(err);
             });
             await Util.sleep(10);
